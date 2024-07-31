@@ -1,14 +1,6 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ],
   "compilerOptions": {
+    "jsx": "react",
     "target": "ES6",
     "module": "commonjs",
     "outDir": "./dist",
