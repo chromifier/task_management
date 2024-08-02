@@ -23,3 +23,15 @@ export const createTicket = async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+// Get all tickets
+export const getAllTickets = async (req: Request, res: Response) => {
+    try {
+      const tickets = await Ticket.find();
+      console.log(tickets);
+      return res.status(200).json(tickets);
+    } catch (err: any) {
+    //   console.error(err.message);
+      return res.status(500).json({ msg: 'Server error' });
+    }
+  };
