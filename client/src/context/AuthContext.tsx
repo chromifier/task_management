@@ -56,7 +56,6 @@ export const AuthProvider: React.FC<{ children: ReactNode; }> = ({ children }) =
         } catch (error: any) {
             console.error('Error logging in:', error.response.data.message);
         }
-
     };
 
     const register = async (username: string, email: string, password: string) => {

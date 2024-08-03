@@ -51,7 +51,16 @@ export const loginUser = async (req: Request, res: Response) => {
             return res.status(400).json({ message: `Incorrect password.` });
         }
 
-        const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
+        const payload = {
+            user: {
+                username: user.username,
+                email: user.email
+            },
+        };
+
+        const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
+            expiresIn: '1h', // Token expiry time
+        });
 
         res.json({ token });
     } catch (err) {

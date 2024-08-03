@@ -2,7 +2,7 @@ import * as React from "react";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { Routes, Route, Outlet, Link } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
+import AuthContext, { useAuth, AuthProvider } from "./context/AuthContext";
 
 export default function App() {
   return (
@@ -61,9 +61,20 @@ function Layout() {
 }
 
 function Home() {
+  const user = React.useContext(AuthContext);
+  console.log(user);
+  console.log(user?.user);
+
+  const onSignOut = async () => {
+    if (user) {
+      user.logout();
+    }
+  };
+
   return (
     <div>
       <h2>Home</h2>
+      <button onClick={onSignOut}>Sign Out</button>
     </div>
   );
 }
