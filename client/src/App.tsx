@@ -61,9 +61,25 @@ function Layout() {
 }
 
 function Home() {
+  interface User {
+    username: string | null;
+    email: string | null;
+  }
+
   const user = React.useContext(AuthContext);
-  console.log(user);
-  console.log(user?.user);
+  const [userDetails, setUserDetails] = React.useState<User | undefined>();
+  console.log("User Token:", localStorage.getItem('token'));
+
+
+  React.useEffect(() => {
+    const userInfo = user?.fetchUserDetails();
+    console.log(userInfo);
+    if (userInfo) {
+      setUserDetails(userInfo);
+    }
+
+    console.log("userDetails State:", userDetails);
+  }, []);
 
   const onSignOut = async () => {
     if (user) {
@@ -71,9 +87,11 @@ function Home() {
     }
   };
 
+
   return (
     <div>
       <h2>Home</h2>
+      <h3>Welcome {userDetails?.username}</h3>
       <button onClick={onSignOut}>Sign Out</button>
     </div>
   );

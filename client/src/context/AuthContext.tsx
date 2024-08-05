@@ -6,6 +6,7 @@ interface AuthContextProps {
     login: (email: string, password: string) => Promise<void>;
     register: (username: string, email: string, password: string) => Promise<void>;
     logout: () => void;
+    fetchUserDetails: () => void;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -72,6 +73,23 @@ export const AuthProvider: React.FC<{ children: ReactNode; }> = ({ children }) =
         }
     };
 
+    const fetchUserDetails = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            };
+
+            const response = await axios.get('http://localhost:5000/api/users/details', config);
+            console.log('User Details Fetched:', response.data);
+            return response.data;
+        } catch (error: any) {
+            console.error('Error fetching user details:', error.response?.data?.msg || error.message);
+        }
+    };
+
     const logout = () => {
         localStorage.removeItem('token');
         delete axios.defaults.headers.common['Authorization'];
@@ -79,7 +97,7 @@ export const AuthProvider: React.FC<{ children: ReactNode; }> = ({ children }) =
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, register, logout }}>
+        <AuthContext.Provider value={{ user, login, register, logout, fetchUserDetails }}>
             {children}
         </AuthContext.Provider>
     );

@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
 
-const JWT_SECRET = 'your_jwt_secret';
+const JWT_SECRET = 'secret';
 
 export const registerUser = async (req: Request, res: Response) => {
     const { username, email, password } = req.body;
@@ -58,12 +58,25 @@ export const loginUser = async (req: Request, res: Response) => {
             },
         };
 
-        const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
+        const token = jwt.sign(payload, "secret", {
             expiresIn: '1h', // Token expiry time
         });
 
         res.json({ token });
     } catch (err) {
         res.status(500).json({ message: 'Server error' });
+    }
+};
+
+export const getUserDetails = (req: Request, res: Response) => {
+    const user = (req as any).user; // Type assertion to access the user object
+
+    if (user) {
+        return res.json({
+            username: user.username,
+            email: user.email,
+        });
+    } else {
+        return res.status(400).json({ msg: 'User not found' });
     }
 };
