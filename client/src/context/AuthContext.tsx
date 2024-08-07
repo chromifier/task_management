@@ -2,12 +2,18 @@ import React, { createContext, useState, useEffect, ReactNode, useContext } from
 import axios from 'axios';
 
 interface AuthContextProps {
-    user: any;
+    user: User | any;
     login: (email: string, password: string) => Promise<void>;
     register: (username: string, email: string, password: string) => Promise<void>;
     logout: () => void;
-    fetchUserDetails: () => void;
+    isAuthenticated: boolean;
 }
+
+interface User {
+    id: string;
+    username: string;
+    email: string;
+  }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
@@ -38,6 +44,7 @@ export const createTicket = async (machineAsset: string, title: string, descript
 
 export const AuthProvider: React.FC<{ children: ReactNode; }> = ({ children }) => {
     const [user, setUser] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -73,22 +80,21 @@ export const AuthProvider: React.FC<{ children: ReactNode; }> = ({ children }) =
         }
     };
 
-    const fetchUserDetails = async () => {
+    const fetchUserDetails = async (token: string): Promise<User | null> => {
         try {
-            const token = localStorage.getItem('token');
-            const config = {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            };
-
-            const response = await axios.get('http://localhost:5000/api/users/details', config);
-            console.log('User Details Fetched:', response.data);
-            return response.data;
+          const config = {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          };
+      
+          const response = await axios.get('http://localhost:5000/api/users/details', config);
+          return response.data; // Assuming response.data contains the user object
         } catch (error: any) {
-            console.error('Error fetching user details:', error.response?.data?.msg || error.message);
+          console.error('Error fetching user details:', error.response?.data?.msg || error.message);
+          return null;
         }
-    };
+      };
 
     const logout = () => {
         localStorage.removeItem('token');
@@ -97,7 +103,7 @@ export const AuthProvider: React.FC<{ children: ReactNode; }> = ({ children }) =
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, register, logout, fetchUserDetails }}>
+        <AuthContext.Provider value={{ user, login, register, logout, isAuthenticated }}>
             {children}
         </AuthContext.Provider>
     );

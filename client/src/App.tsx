@@ -67,15 +67,19 @@ function Home() {
   }
 
   const user = React.useContext(AuthContext);
-  const [userDetails, setUserDetails] = React.useState<User | undefined>();
+  const [userDetails, setUserDetails] = React.useState<User | null>();
   console.log("User Token:", localStorage.getItem('token'));
 
 
   React.useEffect(() => {
-    const userInfo = user?.fetchUserDetails();
-    console.log(userInfo);
-    if (userInfo) {
-      setUserDetails(userInfo);
+    if (localStorage.getItem('token')) {
+      const userInfo = user?.fetchUserDetails();
+      console.log(userInfo);
+      if (userInfo) {
+        setUserDetails(userInfo);
+      }
+    } else {
+      setUserDetails(null);
     }
 
     console.log("userDetails State:", userDetails);
@@ -88,12 +92,17 @@ function Home() {
   };
 
 
+  // Conditionally render content based on whether userDetails is set
+  if (!userDetails) {
+    return <div>Loading...</div>; // Show a loading state or spinner
+  }
+
   return (
-    <div>
-      <h2>Home</h2>
-      <h3>Welcome {userDetails?.username}</h3>
-      <button onClick={onSignOut}>Sign Out</button>
-    </div>
+      <div>
+          {/* Now that userDetails is set, display the content */}
+          <h1>Welcome, {userDetails.username}</h1>
+          <button onClick={onSignOut}>Sign Out</button>
+      </div>
   );
 }
 
