@@ -73,7 +73,7 @@ function Home() {
 
   React.useEffect(() => {
     if (localStorage.getItem('token')) {
-      const userInfo = user?.fetchUserDetails();
+      const userInfo = user?.user;
       console.log(userInfo);
       if (userInfo) {
         setUserDetails(userInfo);
@@ -98,11 +98,11 @@ function Home() {
   }
 
   return (
-      <div>
-          {/* Now that userDetails is set, display the content */}
-          <h1>Welcome, {userDetails.username}</h1>
-          <button onClick={onSignOut}>Sign Out</button>
-      </div>
+    <div>
+      {/* Now that userDetails is set, display the content */}
+      <h1>Welcome, {userDetails.username}</h1>
+      <button onClick={onSignOut}>Sign Out</button>
+    </div>
   );
 }
 

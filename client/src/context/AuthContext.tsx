@@ -13,7 +13,7 @@ interface User {
     id: string;
     username: string;
     email: string;
-  }
+}
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
@@ -43,24 +43,33 @@ export const createTicket = async (machineAsset: string, title: string, descript
 };
 
 export const AuthProvider: React.FC<{ children: ReactNode; }> = ({ children }) => {
-    const [user, setUser] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            setUser(true); // Simplified for example
+            fetchUserDetails(token).then((userDetails) => {
+                if (userDetails) {
+                    setUser(userDetails);
+                }
+            });
         }
     }, []);
 
     const login = async (email: string, password: string) => {
         try {
             const res = await axios.post('http://localhost:5000/api/users/login', { email, password });
-            localStorage.setItem('token', res.data.token);
-            axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
-            setUser(true);
-            console.log("User Logged in successfully. Token: ", res.data.token);
+            const token = res.data.token;
+            localStorage.setItem('token', token);
+            fetchUserDetails(token).then((userDetails) => {
+                if (userDetails) {
+                    setUser(userDetails);
+                }
+            });
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            console.log("User Logged in successfully. Token: ", token);
         } catch (error: any) {
             console.error('Error logging in:', error.response.data.message);
         }
@@ -82,24 +91,24 @@ export const AuthProvider: React.FC<{ children: ReactNode; }> = ({ children }) =
 
     const fetchUserDetails = async (token: string): Promise<User | null> => {
         try {
-          const config = {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          };
-      
-          const response = await axios.get('http://localhost:5000/api/users/details', config);
-          return response.data; // Assuming response.data contains the user object
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+
+            const response = await axios.get('http://localhost:5000/api/users/details', config);
+            return response.data; // Assuming response.data contains the user object
         } catch (error: any) {
-          console.error('Error fetching user details:', error.response?.data?.msg || error.message);
-          return null;
+            console.error('Error fetching user details:', error.response?.data?.msg || error.message);
+            return null;
         }
-      };
+    };
 
     const logout = () => {
         localStorage.removeItem('token');
         delete axios.defaults.headers.common['Authorization'];
-        setUser(false);
+        setUser(null);
     };
 
     return (
