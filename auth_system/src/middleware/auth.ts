@@ -33,6 +33,10 @@ const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction) => 
             return res.status(401).json({ msg: 'Token is not valid' });
         }
 
+        // if (!res.headersSent) {
+        //     res.status(400).json({ message: 'Error' });
+        //     return; // Ensure `next()` is not called
+        // }
         next();
     } catch (err) {
         console.error(err);

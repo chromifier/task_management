@@ -7,7 +7,7 @@ interface Comment {
 }
 
 export interface TicketDocument extends Document {
-    machineAsset: string;
+    machineNumber: string;
     title: string;
     description: string;
     status: 'Open' | 'In Progress' | 'Resolved' | 'Closed';
@@ -35,7 +35,7 @@ const commentSchema = new Schema<Comment>({
 });
 
 const ticketSchema = new Schema<TicketDocument>({
-    machineAsset: {
+    machineNumber: {
         type: String,
         required: true
     },

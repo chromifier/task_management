@@ -3,6 +3,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { Routes, Route, Outlet, Link } from "react-router-dom";
 import AuthContext, { useAuth, AuthProvider } from "./context/AuthContext";
+import { userInfo } from "os";
+import Dashboard from "./pages/Dashboard";
 
 export default function App() {
   return (
@@ -16,6 +18,7 @@ export default function App() {
             <Route index element={<Home />} />
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
+            <Route path="dashboard" element={<Dashboard />} />
 
             {/* Using path="*"" means "match anything", so this route
                 acts like a catch-all for URLs that we don't have explicit
@@ -45,7 +48,7 @@ function Layout() {
             <Link to="/register">Register</Link>
           </li>
           <li>
-            <Link to="/nothing-here">Nothing Here</Link>
+            <Link to="/dashboard">Dashboard</Link>
           </li>
         </ul>
       </nav>
@@ -68,13 +71,13 @@ function Home() {
 
   const user = React.useContext(AuthContext);
   const [userDetails, setUserDetails] = React.useState<User | null>();
-  console.log("User Token:", localStorage.getItem('token'));
+  // console.log("User Token:", localStorage.getItem('token'));
 
 
   React.useEffect(() => {
     if (localStorage.getItem('token')) {
       const userInfo = user?.user;
-      console.log(userInfo);
+      // console.log(userInfo);
       if (userInfo) {
         setUserDetails(userInfo);
       }
@@ -83,7 +86,7 @@ function Home() {
     }
 
     console.log("userDetails State:", userDetails);
-  }, []);
+  }, [user?.user, userDetails]);
 
   const onSignOut = async () => {
     if (user) {
@@ -94,7 +97,12 @@ function Home() {
 
   // Conditionally render content based on whether userDetails is set
   if (!userDetails) {
-    return <div>Loading...</div>; // Show a loading state or spinner
+    return (
+      <div>
+        <h1>Home</h1>
+        <h3>Welcome to your ticket manager</h3>
+      </div>
+    ); // Show a loading state or spinner
   }
 
   return (

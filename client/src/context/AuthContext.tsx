@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, ReactNode, useContext } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextProps {
     user: User | any;
@@ -45,6 +46,7 @@ export const createTicket = async (machineAsset: string, title: string, descript
 export const AuthProvider: React.FC<{ children: ReactNode; }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -70,6 +72,7 @@ export const AuthProvider: React.FC<{ children: ReactNode; }> = ({ children }) =
             });
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             console.log("User Logged in successfully. Token: ", token);
+            navigate("/");
         } catch (error: any) {
             console.error('Error logging in:', error.response.data.message);
         }
