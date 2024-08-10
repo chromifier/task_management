@@ -54,7 +54,7 @@ const TicketList: React.FC = () => {
                 };
 
                 console.log("attempting get for tickets...");
-                const response = await axios.get('http://localhost:5000/api/tickets/getTickets');
+                const response = await axios.get('http://localhost:5000/api/tickets/getTickets', config);
                 setTickets(response.data);
             } catch (error: any) {
                 console.error('Error fetching tickets:', error.response?.data?.message || error.message);

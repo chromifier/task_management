@@ -2,18 +2,14 @@ import * as React from "react";
 import "./App.css";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import { Routes, Route, Outlet, Link } from "react-router-dom";
-import AuthContext, { useAuth, AuthProvider } from "./context/AuthContext";
-import { userInfo } from "os";
+import { Routes, Route, Link } from "react-router-dom";
+import AuthContext, { AuthProvider } from "./context/AuthContext";
 import Dashboard from "./pages/Dashboard";
 import Layout from "./components/Layout";
 
 export default function App() {
   return (
     <div>
-      {/* Routes nest inside one another. Nested route paths build upon
-            parent route paths, and nested route elements render inside
-            parent route elements. See the note about <Outlet> below. */}
       <AuthProvider>
         <Routes>
           <Route path="/" element={<Layout />}>
@@ -21,10 +17,6 @@ export default function App() {
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="dashboard" element={<Dashboard />} />
-
-            {/* Using path="*"" means "match anything", so this route
-                acts like a catch-all for URLs that we don't have explicit
-                routes for. */}
             <Route path="*" element={<NoMatch />} />
           </Route>
         </Routes>
@@ -32,34 +24,6 @@ export default function App() {
     </div>
   );
 }
-
-// function Layout() {
-//   return (
-//     <div>
-//       {/* A "layout route" is a good place to put markup you want to
-//           share across all the pages on your site, like navigation. */}
-//       <nav>
-//         <ul>
-//           <li>
-//             <Link to="/">Home</Link>
-//           </li>
-//           <li>
-//             <Link to="/login">Login</Link>
-//           </li>
-//           <li>
-//             <Link to="/register">Register</Link>
-//           </li>
-//           <li>
-//             <Link to="/dashboard">Dashboard</Link>
-//           </li>
-//         </ul>
-//       </nav>
-
-//       <hr />
-//       <Outlet />
-//     </div>
-//   );
-// }
 
 function Home() {
   interface User {
@@ -69,13 +33,11 @@ function Home() {
 
   const user = React.useContext(AuthContext);
   const [userDetails, setUserDetails] = React.useState<User | null>();
-  // console.log("User Token:", localStorage.getItem('token'));
 
 
   React.useEffect(() => {
     if (localStorage.getItem('token')) {
       const userInfo = user?.user;
-      // console.log(userInfo);
       if (userInfo) {
         setUserDetails(userInfo);
       }
@@ -96,18 +58,19 @@ function Home() {
   // Conditionally render content based on whether userDetails is set
   if (!userDetails) {
     return (
-      <div>
+      <div className="home">
         <h1>Home</h1>
         <h3>Welcome to your ticket manager</h3>
+        <p>Please login to continue...</p>
       </div>
-    ); // Show a loading state or spinner
+    );
   }
 
   return (
-    <div>
+    <div className="home">
       {/* Now that userDetails is set, display the content */}
       <h1>Welcome, {userDetails.username}</h1>
-      <button onClick={onSignOut}>Sign Out</button>
+      <button type="submit" onClick={onSignOut}>Sign Out</button>
     </div>
   );
 }

@@ -21,7 +21,7 @@ const Register: React.FC = () => {
     };
 
     return (
-        <form onSubmit={onSubmit}>
+        <form className='register' onSubmit={onSubmit}>
             <div>
                 <label>Username</label>
                 <input type="text" name="username" value={username} onChange={onChange} required />

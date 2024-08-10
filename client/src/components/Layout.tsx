@@ -1,33 +1,54 @@
-import React from 'react'
+import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
+import AuthContext from '../context/AuthContext';
 
 const Layout: React.FC = () => {
-    const user = localStorage.getItem('token');
+    const user = React.useContext(AuthContext);
 
-    return (
-        <>
-            <div>
-                <nav>
-                    <ul>
-                        <li>
-                            <Link to="/">Home</Link>
-                        </li>
-                        <li>
-                            <Link to="/login">Login</Link>
-                        </li>
-                        <li>
-                            <Link to="/register">Register</Link>
-                        </li>
-                        <li>
-                            <Link to="/dashboard">Dashboard</Link>
-                        </li>
-                    </ul>
-                </nav>
+    if (user?.user) {
+        return (
+            <>
+                <div>
+                    <nav>
+                        <ul>
+                            <li>
+                                <Link to="/">Home</Link>
+                            </li>
+                            <li>
+                                <Link to="/dashboard">Dashboard</Link>
+                            </li>
+                        </ul>
+                    </nav>
 
-                <Outlet />
-            </div>
-        </>
-      );
-}
+                    <Outlet />
+                </div>
+            </>
+        );
+    } else {
+        return (
+            <>
+                <div>
+                    <nav>
+                        <ul>
+                            <li>
+                                <Link to="/">Home</Link>
+                            </li>
+                            <li>
+                                <Link to="/login">Login</Link>
+                            </li>
+                            <li>
+                                <Link to="/register">Register</Link>
+                            </li>
+                        </ul>
+                    </nav>
 
-export default Layout
+                    <Outlet />
+                </div>
+            </>
+        );
+    }
+
+
+};
+
+export default Layout;

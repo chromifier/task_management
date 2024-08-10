@@ -21,7 +21,7 @@ const Login: React.FC = () => {
     };
 
     return (
-        <form onSubmit={onSubmit}>
+        <form className='login' onSubmit={onSubmit}>
             <div>
                 <label>Email</label>
                 <input type="email" name="email" value={email} onChange={onChange} required />

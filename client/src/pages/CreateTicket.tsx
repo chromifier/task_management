@@ -63,7 +63,7 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ username }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className="createTicket" onSubmit={handleSubmit}>
             <div>
                 <label>Machine Number</label>
                 <input
