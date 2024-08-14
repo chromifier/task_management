@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import CreateTicket from './CreateTicket';
 import AuthContext from '../context/AuthContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from '../redux/slices/userSlice';
+import { RootState } from '../redux/store';
 
 interface Ticket {
     _id: string;
@@ -16,6 +19,8 @@ interface Ticket {
 
 const TicketList: React.FC = () => {
     const [tickets, setTickets] = useState<Ticket[]>([]);
+    const userSelector = useSelector((state: RootState) => state.user);
+    console.log("userSelector:", userSelector);
 
     interface User {
         username: string | null;
@@ -26,15 +31,15 @@ const TicketList: React.FC = () => {
     const [userDetails, setUserDetails] = React.useState<User | null>();
 
     useEffect(() => {
-        if (localStorage.getItem('token')) {
-            const userInfo = user?.user;
-            // console.log(userInfo);
-            if (userInfo) {
-                setUserDetails(userInfo);
-            }
-        } else {
-            setUserDetails(null);
-        }
+        // if (localStorage.getItem('token')) {
+        //     const userInfo = user?.user;
+        //     // console.log(userInfo);
+        //     if (userInfo) {
+        //         setUserDetails(userInfo);
+        //     }
+        // } else {
+        //     setUserDetails(null);
+        // }
 
         console.log("userDetails State:", userDetails);
 

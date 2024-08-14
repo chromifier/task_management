@@ -6,6 +6,9 @@ import { Routes, Route, Link } from "react-router-dom";
 import AuthContext, { AuthProvider } from "./context/AuthContext";
 import Dashboard from "./pages/Dashboard";
 import Layout from "./components/Layout";
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from './redux/slices/userSlice';
+import { RootState } from './redux/store';
 
 export default function App() {
   return (
@@ -31,18 +34,24 @@ function Home() {
     email: string | null;
   }
 
+  const dispatch = useDispatch();
+  const userSelector = useSelector((state: RootState) => state.user);
+
   const user = React.useContext(AuthContext);
   const [userDetails, setUserDetails] = React.useState<User | null>();
 
 
   React.useEffect(() => {
+    const userInfo = user?.user;
+    
     if (localStorage.getItem('token')) {
-      const userInfo = user?.user;
       if (userInfo) {
         setUserDetails(userInfo);
+        dispatch(setUser({ username: userInfo.username, email: userInfo.email }));
       }
     } else {
       setUserDetails(null);
+      dispatch(setUser({ username: userInfo.username, email: userInfo.email }));
     }
 
     console.log("userDetails State:", userDetails);
@@ -53,6 +62,10 @@ function Home() {
       user.logout();
     }
   };
+
+  const checkUserState = () => {
+    console.log(userSelector);
+  }
 
 
   // Conditionally render content based on whether userDetails is set
@@ -71,6 +84,7 @@ function Home() {
       {/* Now that userDetails is set, display the content */}
       <h1>Welcome, {userDetails.username}</h1>
       <button type="submit" onClick={onSignOut}>Sign Out</button>
+      <button onClick={checkUserState}>Check User State</button>
     </div>
   );
 }

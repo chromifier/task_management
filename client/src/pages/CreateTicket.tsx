@@ -108,7 +108,7 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ username }) => {
                     <option value="High">High</option>
                 </select>
             </div>
-            <button type="submit">Create Ticket</button>
+            <button type="submit">Save Ticket</button>
         </form>
     );
 };
