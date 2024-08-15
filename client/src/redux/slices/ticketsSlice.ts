@@ -1,42 +1,40 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-// Define the async thunk
-export const getTickets = createAsyncThunk(
-  'tickets/getTickets',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/tickets/getTickets');
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || error.message);
-    }
-  }
-);
+interface Ticket {
+  machineNumber: string;
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  createdBy: string;
+  createdAt: Date;
+  updatedAt: Date;
+  comments: Array<string> | null,
+}
+
+type TicketsState = Ticket[];
+
+const initialState: TicketsState = [];
 
 const ticketsSlice = createSlice({
   name: 'tickets',
-  initialState: {
-    tickets: [],
-    loading: false,
-    error: null,
-  },
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(getTickets.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(getTickets.fulfilled, (state, action) => {
-        state.tickets = action.payload;
-        state.loading = false;
-      })
-      .addCase(getTickets.rejected, (state: any, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      });
+  initialState,
+  reducers: {
+    addTicket: (state, action: PayloadAction<Ticket>) => {
+      state.push(action.payload);
+    },
+    removeTicket: (state, action: PayloadAction<string>) => {
+      return state.filter(ticket => ticket.title !== action.payload);
+    },
+    updateTicket: (state, action: PayloadAction<Ticket>) => {
+      const index = state.findIndex(ticket => ticket.title === action.payload.title);
+      if (index !== -1) {
+        state[index] = action.payload;
+      }
+    },
   },
 });
+
+export const { addTicket, removeTicket, updateTicket } = ticketsSlice.actions;
 
 export default ticketsSlice.reducer;

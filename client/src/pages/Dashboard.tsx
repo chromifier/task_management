@@ -5,6 +5,7 @@ import AuthContext from '../context/AuthContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../redux/slices/userSlice';
 import { RootState } from '../redux/store';
+import { addTicket } from '../redux/slices/ticketsSlice';
 
 interface Ticket {
     _id: string;
@@ -20,30 +21,15 @@ interface Ticket {
 const TicketList: React.FC = () => {
     const [tickets, setTickets] = useState<Ticket[]>([]);
     const userSelector = useSelector((state: RootState) => state.user);
-    console.log("userSelector:", userSelector);
+    const ticketsSelector = useSelector((state: RootState) => tickets);
+    const dispatch = useDispatch();
+    // console.log("userSelector:", userSelector);
 
-    interface User {
-        username: string | null;
-        email: string | null;
-    }
+    console.log(ticketsSelector);
 
-    const user = React.useContext(AuthContext);
-    const [userDetails, setUserDetails] = React.useState<User | null>();
+
 
     useEffect(() => {
-        // if (localStorage.getItem('token')) {
-        //     const userInfo = user?.user;
-        //     // console.log(userInfo);
-        //     if (userInfo) {
-        //         setUserDetails(userInfo);
-        //     }
-        // } else {
-        //     setUserDetails(null);
-        // }
-
-        console.log("userDetails State:", userDetails);
-
-
         const fetchTickets = async () => {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -60,18 +46,21 @@ const TicketList: React.FC = () => {
 
                 console.log("attempting get for tickets...");
                 const response = await axios.get('http://localhost:5000/api/tickets/getTickets', config);
+                dispatch(addTicket(response.data));
                 setTickets(response.data);
             } catch (error: any) {
                 console.error('Error fetching tickets:', error.response?.data?.message || error.message);
             }
         };
 
-        fetchTickets();
+        if (ticketsSelector.length === 0) {
+            fetchTickets();
+        }
     }, []);
 
     return (
         <>
-            <CreateTicket username={userDetails?.username} />
+            <CreateTicket username={userSelector?.username} />
             <div>
                 <h1>Tickets</h1>
                 <ul>

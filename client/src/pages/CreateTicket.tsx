@@ -13,6 +13,8 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ username }) => {
     const [status, setStatus] = useState('');
     const [priority, setPriority] = useState('');
 
+    // console.log("USERNAME:", username);
+
     const createTicket = async (machineAsset: string, title: string, description: string, status: string, priority: string, createdBy: string) => {
         // await axios.post('/api/users/register', { username, email, password });
         try {
@@ -54,6 +56,8 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ username }) => {
                 priority,
                 createdBy: username
             };
+
+            console.log(newTicket);
 
             const response = await axios.post('http://localhost:5000/api/tickets/create', newTicket);
             console.log('Ticket created:', response.data);

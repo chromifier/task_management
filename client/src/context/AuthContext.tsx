@@ -26,22 +26,22 @@ export const useAuth = (): AuthContextProps => {
     return context;
 };
 
-export const createTicket = async (machineAsset: string, title: string, description: string, status: string, priority: string, createdBy: string) => {
-    // await axios.post('/api/users/register', { username, email, password });
-    try {
-        const response = await axios.post('http://localhost:5000/api/ticket/create', {
-            machineAsset,
-            title,
-            description,
-            status,
-            priority,
-            createdBy
-        });
-        console.log('Ticket Created:', response.data);
-    } catch (error) {
-        console.error('Error creating ticket:', error);
-    }
-};
+// export const createTicket = async (machineAsset: string, title: string, description: string, status: string, priority: string, createdBy: string) => {
+//     // await axios.post('/api/users/register', { username, email, password });
+//     try {
+//         const response = await axios.post('http://localhost:5000/api/ticket/create', {
+//             machineAsset,
+//             title,
+//             description,
+//             status,
+//             priority,
+//             createdBy
+//         });
+//         console.log('Ticket Created:', response.data);
+//     } catch (error) {
+//         console.error('Error creating ticket:', error);
+//     }
+// };
 
 export const AuthProvider: React.FC<{ children: ReactNode; }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);

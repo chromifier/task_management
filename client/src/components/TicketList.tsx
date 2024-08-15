@@ -1,27 +1,28 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTickets } from '../redux/slices/ticketsSlice';
+// import { getTickets } from '../redux/slices/ticketsSlice';
 import { RootState } from '../redux/store';
+import { useAppDispatch } from '../redux/hooks/reduxHooks';
 
 const TicketList: React.FC = () => {
-  const dispatch = useDispatch();
-  const tickets = useSelector((state: RootState) => state.tickets.tickets);
-  const loading = useSelector((state: RootState) => state.tickets.loading);
-  const error = useSelector((state: RootState) => state.tickets.error);
+  // const dispatch = useAppDispatch();
+  // const tickets = useSelector((state: RootState) => state.tickets.tickets);
+  // const loading = useSelector((state: RootState) => state.tickets.loading);
+  // const error = useSelector((state: RootState) => state.tickets.error);
 
-  useEffect(() => {
-    dispatch(getTickets());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getTickets());
+  // }, []);
 
-  if (loading) return <p>Loading tickets...</p>;
-  if (error) return <p>Error: {error}</p>;
+  // if (loading) return <p>Loading tickets...</p>;
+  // if (error) return <p>Error: {error}</p>;
+
+  // console.log(tickets);
 
   return (
-    <ul>
-      {tickets.map(ticket => (
-        <li key={ticket._id}>{ticket.title}</li>
-      ))}
-    </ul>
+    <>
+      list here:
+    </>
   );
 };
 
